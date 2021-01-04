@@ -1,0 +1,33 @@
+{
+  "name": "bloglist-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lightkun10/Blog-List.git"
+  },
+  "author": "pandupanda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lightkun10/Blog-List/issues"
+  },
+  "homepage": "https://github.com/lightkun10/Blog-List#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.9"
+  },
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.6"
+  }
+}

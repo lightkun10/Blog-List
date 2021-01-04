@@ -1,0 +1,5 @@
+The event handlers of routes are commonly referred 
+to as controllers, and for this reason I have 
+created a new controllers directory. All of the 
+routes related to notes are now in the notes.js 
+module under the controllers directory.
