@@ -58,7 +58,7 @@ test('a valid blog can be added', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .expect(201)
+    .expect(200)
     .expect('Content-Type', /application\/json/);
 
   const blogsAtEnd = await helper.blogsInDb();
@@ -77,6 +77,21 @@ test('likes property is not missing', async () => {
   const contents = response.body.map((r) => r.likes);
 
   contents.forEach((likes) => expect(likes).toBeDefined());
+});
+
+test('blog without title and url is not added', async () => {
+  const newBlog = {
+    author: 'test',
+    likes: 0,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 });
 
 afterAll(() => {

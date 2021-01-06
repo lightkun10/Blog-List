@@ -2,7 +2,6 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "React v17.0",
   "author": "Dan Abramov",
-  "url": "https://reactjs.org/blog/2020/10/20/react-v17.html"
+  "likes": 0,
 }
