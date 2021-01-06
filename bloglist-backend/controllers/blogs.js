@@ -1,13 +1,13 @@
+/**
+ * Router handling for blogs.
+ */
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
 
 /** SECTION: Fetching all blogs from database */
-blogsRouter.get('/', (request, response) => {
-  Blog
-    .find({})
-    .then((blogs) => {
-      response.json(blogs);
-    });
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({});
+  response.json(blogs);
 });
 
 blogsRouter.post('/', (request, response, next) => {
