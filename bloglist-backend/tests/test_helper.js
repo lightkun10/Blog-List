@@ -6,7 +6,7 @@ const initialBlogs = [
     title: 'React v17.0',
     author: 'Dan Abramov',
     url: 'https://reactjs.org/blog/2020/10/20/react-v17.html',
-    likes: 0,
+    likes: 10,
   },
   {
     title: 'Introducing Zero-Bundle-Size React Server Components',

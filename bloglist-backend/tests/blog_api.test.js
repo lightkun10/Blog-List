@@ -42,7 +42,9 @@ test('unique identifier property is named id', async () => {
   const response = await api.get('/api/blogs');
 
   const contents = response.body.map((r) => r.id);
-  expect(contents).toBeDefined();
+
+  contents.forEach((id) => expect(id).toBeDefined());
+  // expect(contents).toBeDefined();
 });
 
 test('a valid blog can be added', async () => {
@@ -68,6 +70,13 @@ test('a valid blog can be added', async () => {
   expect(contents).toContain(
     'test new blog',
   );
+});
+
+test('likes property is not missing', async () => {
+  const response = await api.get('/api/blogs');
+  const contents = response.body.map((r) => r.likes);
+
+  contents.forEach((likes) => expect(likes).toBeDefined());
 });
 
 afterAll(() => {
