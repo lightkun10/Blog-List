@@ -38,6 +38,13 @@ test('a specific blog is within the returned blogs', async () => {
   );
 });
 
+test('unique identifier property is named id', async () => {
+  const response = await api.get('/api/blogs');
+
+  const contents = response.body.map((r) => r.id);
+  expect(contents).toBeDefined();
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
