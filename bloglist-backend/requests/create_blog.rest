@@ -2,6 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "author": "Dan Abramov",
-  "likes": 0,
+  "title": "Is it Convenient? Would I Enjoy it? Wrong Question.",
+  "author": "Pandu Panda",
+  "url": "https://www.mrmoneymustache.com/2012/09/18/is-it-convenient-would-i-enjoy-it-wrong-question/",
+  "userId": "5ff678cc01e2ef34207c59fe"
 }
