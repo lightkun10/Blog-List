@@ -1,0 +1,9 @@
+DELETE http://localhost:3003/api/blogs/5ff8250e607e84031c0feeb2
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbmtpbWFzdGEiLCJpZCI6IjVmZjY3OTVlODA2OWJjNDRiOGY5MGY2OSIsImlhdCI6MTYxMDA5NTYzOX0.8Cr8ohsBVFh4BZWSMJwBDUtVvnJcY_eqR8KqmqAsWqs
+# Token from Dan Silverstein
+
+# DELETE http://localhost:3003/api/blogs/5ff81b2df6b7e12650dd1e23
+# Content-Type: application/json
+# Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhbmRhcGFuZGE4OSIsImlkIjoiNWZmNjc4Y2MwMWUyZWYzNDIwN2M1OWZlIiwiaWF0IjoxNjEwMDcyNjk1fQ.ncfyEbyrfiHtOR4pZKcG6b6TWJ15g5xVCGbcbDPD5D8
+# # Token from Pandu Panda

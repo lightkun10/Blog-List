@@ -19,6 +19,7 @@ blogsRouter.get('/', async (request, response) => {
 /** SECTION: Adding a new blog to the database */
 blogsRouter.post('/', async (request, response) => {
   const { body, token } = request;
+
   // If no title and url provided, response with
   // status 404 and early finish this operation.
   if (!body.title && !body.url) {
@@ -50,6 +51,18 @@ blogsRouter.post('/', async (request, response) => {
 
 /** SECTION: Deleting a blog from database */
 blogsRouter.delete('/:id', async (request, response) => {
+  // Find the author of blog
+  // if author id is the same as the requesting delete, accept
+  // otherwise reject.
+  const blog = await Blog.findById(request.params.id);
+  const requestedBlogAuthorId = blog.user.toString();
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  const requester = await User.findById(decodedToken.id);
+  // console.log(`${requestedBlogAuthorId} --- ${requester._id}`);
+  if (requestedBlogAuthorId !== (requester._id).toString()) {
+    return response.status(401).json({ error: 'not allowed' });
+  }
+
   await Blog.findByIdAndRemove(request.params.id);
   response.status(204).end();
 });
