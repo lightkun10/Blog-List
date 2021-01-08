@@ -10,6 +10,7 @@ const cors = require('cors');
 const config = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
 const usersRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 
@@ -35,6 +36,7 @@ app.use(middleware.requestLogger);
 
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 
 app.use(middleware.unknownEndPoint); // handler of requests with unknown endpoint
 app.use(middleware.errorHandler); // handler of requests with result to errors
