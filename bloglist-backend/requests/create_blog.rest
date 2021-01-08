@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhbmRhcGFuZGE4OSIsImlkIjoiNWZmNjc4Y2MwMWUyZWYzNDIwN2M1OWZlIiwiaWF0IjoxNjEwMDcyNjk1fQ.ncfyEbyrfiHtOR4pZKcG6b6TWJ15g5xVCGbcbDPD5D8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbmtpbWFzdGEiLCJpZCI6IjVmZjY3OTVlODA2OWJjNDRiOGY5MGY2OSIsImlhdCI6MTYxMDA5NTYzOX0.8Cr8ohsBVFh4BZWSMJwBDUtVvnJcY_eqR8KqmqAsWqs
 
 {
-  "title": "World of Horror: 10 Tips To Help You Beat Your First Run & Stop The Eldritch Invasion",
-  "author": "Pandu Panda",
-  "url": "https://gameranx.com/features/id/193254/article/world-of-horror-10-tips-to-help-you-beat-your-first-run-stop-the-eldritch-invasion/"
+  "title": "Durham mother of four back on track after roach infestation",
+  "author": "Dan Silverstein",
+  "url": "https://www.wral.com/durham-mother-of-four-back-on-track-after-roach-infestation/19452790/"
 }

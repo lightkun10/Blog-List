@@ -16,26 +16,15 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-// This function isolates the token
-// from the authorization header.
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 /** SECTION: Adding a new blog to the database */
 blogsRouter.post('/', async (request, response) => {
-  const { body } = request;
+  const { body, token } = request;
   // If no title and url provided, response with
   // status 404 and early finish this operation.
   if (!body.title && !body.url) {
     return response.status(400).json({ error: 'missing url or title' });
   }
 
-  const token = getTokenFrom(request);
   const decodedToken = jwt.verify(token, process.env.SECRET);
   if (!token || !decodedToken.id) {
     // 401 Unauthorized
