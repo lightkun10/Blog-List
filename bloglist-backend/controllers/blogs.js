@@ -51,9 +51,6 @@ blogsRouter.post('/', async (request, response) => {
 
 /** SECTION: Deleting a blog from database */
 blogsRouter.delete('/:id', async (request, response) => {
-  // Find the author of blog
-  // if author id is the same as the requesting delete, accept
-  // otherwise reject.
   const blog = await Blog.findById(request.params.id);
   const requestedBlogAuthorId = blog.user.toString();
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
