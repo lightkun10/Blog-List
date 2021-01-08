@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhbmRhcGFuZGE4OSIsImlkIjoiNWZmNjc4Y2MwMWUyZWYzNDIwN2M1OWZlIiwiaWF0IjoxNjEwMDcyNjk1fQ.ncfyEbyrfiHtOR4pZKcG6b6TWJ15g5xVCGbcbDPD5D8
 
 {
-  "title": "Is it Convenient? Would I Enjoy it? Wrong Question.",
+  "title": "World of Horror: 10 Tips To Help You Beat Your First Run & Stop The Eldritch Invasion",
   "author": "Pandu Panda",
-  "url": "https://www.mrmoneymustache.com/2012/09/18/is-it-convenient-would-i-enjoy-it-wrong-question/",
-  "userId": "5ff678cc01e2ef34207c59fe"
+  "url": "https://gameranx.com/features/id/193254/article/world-of-horror-10-tips-to-help-you-beat-your-first-run-stop-the-eldritch-invasion/"
 }

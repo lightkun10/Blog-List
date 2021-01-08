@@ -4,6 +4,7 @@
  * Router handling for blogs.
  */
 const blogsRouter = require('express').Router();
+const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
@@ -15,17 +16,33 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
+// This function isolates the token
+// from the authorization header.
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7);
+  }
+  return null;
+};
+
 /** SECTION: Adding a new blog to the database */
 blogsRouter.post('/', async (request, response) => {
   const { body } = request;
-
   // If no title and url provided, response with
   // status 404 and early finish this operation.
   if (!body.title && !body.url) {
     return response.status(400).json({ error: 'missing url or title' });
   }
 
-  const user = await User.findById(body.userId);
+  const token = getTokenFrom(request);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!token || !decodedToken.id) {
+    // 401 Unauthorized
+    // https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     title: body.title,
