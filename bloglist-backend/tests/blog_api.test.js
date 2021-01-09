@@ -1,45 +1,43 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const jwt = require('jsonwebtoken');
 const helper = require('./test_helper');
 const app = require('../app');
 const Blog = require('../models/blog');
+const initialBlogs = require('./blogs_for_tests');
 
 const api = supertest(app);
 
 /* SECTION Initialize database before every test. */
 beforeEach(async () => {
-  await Blog.deleteMany({});
-
-  const blogObjects = helper.initialBlogs
-    .map((blog) => new Blog(blog));
-  const promiseArray = blogObjects.map((blog) => blog.save());
-  await Promise.all(promiseArray);
+  await helper.beforeBlogsUsers();
 });
 
-describe('When there is some initial notes saved', () => {
-  test('blogs returned as json', async () => {
+describe('When there is some initial blogs saved', () => {
+  test('blogs returned as json', async () => { // DONE
     await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
 
-  test('all blogs are returned', async () => {
+  test('all blogs are returned', async () => { // DONE
     const response = await api.get('/api/blogs');
 
-    expect(response.body).toHaveLength(helper.initialBlogs.length);
+    expect(response.body).toHaveLength(initialBlogs.blogs.length);
   });
 
-  test('a specific blog is within the returned blogs', async () => {
+  test('a specific blog is within the returned blogs', async () => { // DONE
     const response = await api.get('/api/blogs');
 
     const titles = response.body.map((r) => r.title);
     expect(titles).toContainEqual(
-      'Introducing Zero-Bundle-Size React Server Components',
+      'How BioWare\'s Anthem Went Wrong',
     );
   });
 
-  test('unique identifier properties is named id', async () => {
+  test('unique identifier properties is named id', async () => { // DONE
     const response = await api.get('/api/blogs');
 
     const ids = response.body.map((r) => r.id);
@@ -48,8 +46,39 @@ describe('When there is some initial notes saved', () => {
   });
 });
 
-describe('Addition of a new note', () => {
-  test('succeeds with valid data', async () => {
+describe('Addition of a new blog', () => {
+  test('a registered user succeeds with valid data', async () => { // DONE
+    const test1Token = jwt.sign({
+      username: helper.initialUsers[0].username,
+      id: helper.initialUsers[0]._id,
+    }, process.env.SECRET);
+
+    const newBlog = {
+      title: 'test new blog',
+      author: 'pandu',
+      url: 'test',
+      likes: 0,
+    };
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${test1Token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(initialBlogs.blogs.length + 1);
+
+    // Ensure that the content of the blog post
+    // is saved correctly to the database.
+    const titles = blogsAtEnd.map((blog) => blog.title);
+    expect(titles).toContain(
+      'test new blog',
+    );
+  });
+
+  test('non registered user failed', async () => {
     const newBlog = {
       title: 'test new blog',
       author: 'pandu',
@@ -60,21 +89,16 @@ describe('Addition of a new note', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(201)
+      .expect(401)
       .expect('Content-Type', /application\/json/);
-
-    const blogsAtEnd = await helper.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
-
-    // Ensure that the content of the blog post
-    // is saved correctly to the database.
-    const titles = blogsAtEnd.map((blog) => blog.title);
-    expect(titles).toContain(
-      'test new blog',
-    );
   });
 
-  test('likes property is not missing', async () => {
+  test('likes property is not missing', async () => { // DONE
+    const test1Token = jwt.sign({
+      username: helper.initialUsers[0].username,
+      id: helper.initialUsers[0]._id,
+    }, process.env.SECRET);
+
     const newBlog = {
       title: 'testtitle',
       author: 'testauthor',
@@ -84,6 +108,7 @@ describe('Addition of a new note', () => {
     let res = null;
     res = await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${test1Token}`)
       .send(newBlog)
       .expect(201);
 
@@ -91,6 +116,11 @@ describe('Addition of a new note', () => {
   });
 
   test('fails with status code 400 if title and url is invalid', async () => {
+    const test1Token = jwt.sign({
+      username: helper.initialUsers[0].username,
+      id: helper.initialUsers[0]._id,
+    }, process.env.SECRET);
+
     const newBlog = {
       author: 'test',
       likes: 0,
@@ -98,26 +128,33 @@ describe('Addition of a new note', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${test1Token}`)
       .send(newBlog)
       .expect(400);
 
     const blogsAtEnd = await helper.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+    expect(blogsAtEnd).toHaveLength(initialBlogs.blogs.length);
   });
 });
 
 describe('Deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
+    const test1Token = jwt.sign({
+      username: helper.initialUsers[0].username,
+      id: helper.initialUsers[0]._id,
+    }, process.env.SECRET);
+
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `bearer ${test1Token}`)
       .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1,
+      initialBlogs.blogs.length - 1,
     );
 
     const titles = blogsAtEnd.map((blog) => blog.title);
@@ -128,6 +165,11 @@ describe('Deletion of a blog', () => {
 
 describe('Updates of a blog', () => {
   test('returns 200 on updated likes', async () => {
+    const test1Token = jwt.sign({
+      username: helper.initialUsers[0].username,
+      id: helper.initialUsers[0]._id,
+    }, process.env.SECRET);
+
     const blogsAtStart = await helper.blogsInDb();
     const blogToUpdate = blogsAtStart[0];
 
@@ -137,6 +179,7 @@ describe('Updates of a blog', () => {
 
     const result = await api
       .put(`/api/blogs/${blogToUpdate.id}`)
+      .set('Authorization', `bearer ${test1Token}`)
       .send(updateLikes)
       .expect(200)
       .expect('Content-Type', /application\/json/);

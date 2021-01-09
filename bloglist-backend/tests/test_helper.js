@@ -1,34 +1,21 @@
 /* eslint-disable no-underscore-dangle */
+require('../utils/config');
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const initialBlogs = require('./blogs_for_tests');
+const initialUsers = require('./users_for_tests');
 
-const initialBlogs = [
-  {
-    title: 'React v17.0',
-    author: 'Dan Abramov',
-    url: 'https://reactjs.org/blog/2020/10/20/react-v17.html',
-    likes: 10,
-  },
-  {
-    title: 'Introducing Zero-Bundle-Size React Server Components',
-    author: 'Dan Abramov, Lauren Tan, Joseph Savona, Sebastian Markbåge',
-    url: 'https://reactjs.org/blog/2020/12/21/data-fetching-with-react-server-components.html',
-    likes: 0,
-  },
-];
+// Take all blogs and assign to the test user
+const blogIds = initialBlogs.blogs.map((blog) => blog._id);
 
-const nonExistingId = async () => {
-  const blog = new Blog({
-    title: 'for_testing',
-    author: 'test',
-    url: 'test',
-    likes: 0,
-  });
-  await blog.save();
-  await blog.remove();
+// Sign a member with its respective blogs
+const testUser1 = { ...initialUsers.users[0], blogs: blogIds.slice(0, 3) };
+const testUser2 = { ...initialUsers.users[1], blogs: blogIds.slice(0, 3) };
 
-  return blog._id.toString();
-};
+const test1Blogs = initialBlogs.blogs
+  .slice(0, 3).map((blog) => ({ ...blog, user: initialUsers.users[0]._id }));
+const test2Blogs = initialBlogs.blogs
+  .slice(3).map((blog) => ({ ...blog, user: initialUsers.users[1]._id }));
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
@@ -40,9 +27,17 @@ const usersInDb = async () => {
   return users.map((user) => user.toJSON());
 };
 
+const beforeBlogsUsers = async () => {
+  await User.deleteMany({});
+  await Blog.deleteMany({});
+  await User.insertMany([testUser1, testUser2]);
+  await Blog.insertMany([...test1Blogs, ...test2Blogs]);
+};
+
 module.exports = {
   initialBlogs,
-  nonExistingId,
+  initialUsers: [testUser1, testUser2],
   blogsInDb,
   usersInDb,
+  beforeBlogsUsers,
 };
