@@ -161,6 +161,40 @@ describe('Deletion of a blog', () => {
 
     expect(titles).not.toContain(blogToDelete.title);
   });
+
+  test('failed with status code 401 if not the owner', async () => {
+    const test2Token = jwt.sign({
+      username: helper.initialUsers[1].username,
+      id: helper.initialUsers[1]._id,
+    }, process.env.SECRET);
+
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('authorization', `bearer ${test2Token}`)
+      .expect(401);
+  });
+
+  test('failed with status code 401 if invalid token', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', 'bearer false token')
+      .expect(401);
+  });
+
+  test('failed with status code 401 if no token', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(401);
+  });
 });
 
 describe('Updates of a blog', () => {

@@ -10,7 +10,7 @@ const blogIds = initialBlogs.blogs.map((blog) => blog._id);
 
 // Sign a member with its respective blogs
 const testUser1 = { ...initialUsers.users[0], blogs: blogIds.slice(0, 3) };
-const testUser2 = { ...initialUsers.users[1], blogs: blogIds.slice(0, 3) };
+const testUser2 = { ...initialUsers.users[1], blogs: blogIds.slice(3) };
 
 const test1Blogs = initialBlogs.blogs
   .slice(0, 3).map((blog) => ({ ...blog, user: initialUsers.users[0]._id }));
